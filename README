@@ -1,0 +1,83 @@
+AUTHOR: Kelvin E Jones, kejones@ualberta.ca
+DATE: Dec 1, 2002
+
+This collection of files can be used to reproduce the modeling results in:
+
+K.P. Carlin, K.E. Jones, Z. Jiang, L.M. Jordan and R.M. Brownstone
+Dendritic L-type calcium currents in mouse spinal motoneurons: implications for bistability.
+European Journal of Neuroscience, Vol. 12, pp. 1635-1646, 2000
+
+The parameters for the ion channels were adapted from:
+
+V. Booth, J. Rinzel and O. Kiehn
+Compartmental model of vertebrate motoneurons for Ca2+-dependent spiking and plateau potentials
+under pharmacological treatment.
+Journal of Neurophysiology, Vol. 78, pp. 3371-3385, 1997
+
+The files are meant to reproduce the results illustrated in Figure 3 of Carlin et al. (2000).
+
+The file fig_3aleft.hoc will produce the left panel of fig3a.  The file fig_3aright.hoc
+needs to have the the fig_3aleft.hoc file run first.  These files produces approximations
+to the figures in the paper.  If higher numerical resolution is desired the time step
+can be decreased to 0.025 ms but of course this will take longer to calculate the figures.
+
+If it is desired to indiviually generate these panels the following procedure may be followed:
+In order to reproduce the various panels of the figure some editing will be needed.
+All editing can be done in the file 'init.hoc' on the lines 11 & 17.
+Line 11 opens the file describing the membrane mechanisms in the model, of which there are 7:
+
+memb_N_soma.hoc, memb_N_dend.hoc, memb_LLVA_soma.hoc, memb_LLVA_dend.hoc, memb_LHVA_soma.hoc,
+memb_LHVA_dend.hoc & memb_Lboth.hoc
+
+Line 17 opens a session file for performing two types of experiments illustrated:
+
+voltage_step.ses	//for doing the voltage step experiments of Fig 3A
+ramp.ses		//for doing the ramp voltage clamp exp's of Figs 3B,C
+
+In order to reproduce Fig 3A top, left panel (N type Ca2+ channels in soma):
+Line 11= xopen("memb_N_soma.hoc")
+Line 17= xopen("voltage_step.ses")
+
+Fig 3A top, right panel (N type Ca2+ channels in dendrites):
+Line 11= xopen("memb_N_dend.hoc")
+Line 17= xopen("voltage_step.ses")
+
+
+Prior to running the voltage_step.ses simulations:
+1) Turn on 'Keep Lines' in the two Graph windows by right clicking and selecting *Keep Lines*
+2) Click on VClamp in the PointProcess window and check the amplitude of the Testing Level.
+   It can be left at -51 mV or depolarized to skip voltage test levels. Leave it odd though
+   if you want to have figures like those publised.
+3) Click on VClamp Family in the PointProcess window and make sure that there are about
+   20 steps with a resolution of 2 mV/step.
+4) Click on Quiet to suppress continuous drawing since these simulations take some time.
+5) Click on Vary Test level in the PointProcess window to start the simulations.
+
+On my machine with currents in the soma, the 700 ms voltage clamp protocol takes 17 sec Real Time.
+With currents in the dendrites the same protocol takes 77 sec Real Time.
+
+*/-----------------------------------------------------------------------------------------
+// NOTE: The paper reports the currents as current density. This was done so that we could
+// constrain the simulation to the experimental data. The model has an estimated capacitance
+// of 8.4 nF using the same protocol as we used experimentally. The peak current density
+// experimentally was 8.7 pA/pF where the capacitance of the cells was measured by integrating
+// the current transient during a -10 mV, 50 ms voltage step and dividing by 10 mV.
+-----------------------------------------------------------------------------------------*/
+
+
+In order to reproduce Fig 3Bi (L_LVA type Ca2+ channels in soma):
+Line 11= xopen("memb_LLVA_soma.hoc")
+Line 17= xopen("ramp.ses")
+
+Fig 3Bii (L_LVA type Ca2+ channels in dendrites):
+Line 11= xopen("memb_LLVA_dend.hoc")
+Line 17= xopen("ramp.ses")
+
+Prior to running the ramp.ses simulations:
+1) You will probably want to select Quiet to suppress the graph drawing to speed things up.
+2) Check the parameters of the PointProcess by selecting R_VClamp: dur= 100, 20000, 100; amp= -120, -180, -120
+3) Click on Init & Run and away you go.
+
+On my machine these simulations with dendritic currents take >1800 sec (30 min). You don't get the I-V curve in
+the paper but you can save the data and plot it that way if you like.
+

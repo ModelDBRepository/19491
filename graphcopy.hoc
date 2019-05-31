@@ -1,0 +1,23 @@
+objref hidden_graph_list, hidden_xvec, hidden_yvec, hidden_g1, hidden_g2
+hidden_xvec = new Vector()
+hidden_yvec = new Vector()
+
+// calling format is graphlinecopy(graphObject1, graphObject2)
+// all the lines are copied from the 1 graph to the 2 graph
+
+proc graphlinecopy() {	local j, i
+	j=0
+ 	hidden_g1=$o1
+ 	hidden_g2=$o2
+//	hidden_g2.exec_menu("Erase")
+	hidden_g2.exec_menu("Keep Lines")
+	for (i=-1; (i = hidden_g1.getline(j, hidden_xvec, hidden_yvec) != -1)&&(j<200) ; j+=1 ) {
+		// xvec and yvec contain the line with Graph internal index i.
+		// and can be associated with the sequential index j.
+		// print i,j
+		if (j>=1) {
+			hidden_yvec.label("")	// blank out labels
+		}
+		hidden_yvec.line(hidden_g2,hidden_xvec)	// use default color on $o2
+      }
+}

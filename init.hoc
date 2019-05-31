@@ -1,0 +1,22 @@
+//This is the main file to call from the command line. By calling this file the
+//associated files making up the component structure of the model will be loaded.
+// AUTHOR: Kelvin Jones
+// DATE: 980728
+
+load_file("nrngui.hoc")		// for compatibility with Windows version
+
+xopen("morphology.hoc")		//retrieves the file with the morphological description
+					//and names of the components of the model
+
+xopen("memb_Lboth.hoc")	//retrieves the file with the descriptions of the
+					//active and passive membrane properties of the model,
+					//their locations and densities
+
+access soma
+
+xopen("ramp.ses")			// brings up the default windows
+
+celsius = 36				// I put this here to make sure it doesn't
+					// get changed by a ses file
+forall eca=60
+

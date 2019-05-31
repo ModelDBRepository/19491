@@ -1,0 +1,94 @@
+// fig3A.hoc generates an approx to fig3A
+// based on init.hoc whose header lines follow:
+// This is the main file to call from the command line. By calling this file the
+//associated files making up the component structure of the model will be loaded.
+// AUTHOR: Kelvin Jones
+// DATE: 980728
+
+load_file("nrngui.hoc")		// for compatibility with Windows version
+load_file("graphcopy.hoc")	// contains a proc to copy lines in graphs
+
+xopen("morphology.hoc")		//retrieves the file with the morphological description
+					//and names of the components of the model
+// top left
+print "top left"
+
+// for fig3AB open all the membrane properties
+// then set to zero the properties that are not desired for a particular figure
+
+xopen("memb_N_soma.hoc")	//retrieves the file with the descriptions of the
+xopen("memb_LLVA_soma.hoc")	//active and passive membrane properties of the model,
+xopen("memb_LHVA_soma.hoc")	//their locations and densities
+
+proc all_soma_ca_off() {
+	soma {gcabar_N_Ca=0 gcabar_L_Ca=0 gcabar_L_HVA_Ca=0}
+}
+
+all_soma_ca_off()	//turn off all the soma Ca currents
+
+
+access soma
+
+xopen("voltage_step.ses")			// brings up the default windows
+
+celsius = 36				// I put this here to make sure it doesn't
+					// get changed by a ses file
+// forall eca=60
+execute("vcsteps=25",Electrode[0])
+execute("vcincrement=2",Electrode[0])
+
+// Graph[0].view(0, -300, 700, 320, 650, 320, 500, 360)
+Graph[0].exec_menu("Keep Lines")
+Graph[1].exec_menu("Keep Lines")
+steps_per_ms = .1
+dt = 10
+execute("installFamily()",Electrode[0])	// switch to VClamp mode
+init()
+
+objref somaBox, g[6], vclamp_i_vec, soma_v_vec, t_vec, result_vec, outerBox
+
+for i=0,5 {
+	g[i] = new Graph(0)
+}
+
+proc addGraph() {
+	$o2.intercept(1)
+		graphlinecopy(Graph[0],g[$1])
+	    	{g[$1].view(0, -300, 700, 320, 631, win_top, win_width, win_height)}
+	$o2.intercept(0)
+}
+
+somaBox = new VBox()
+
+all_soma_ca_off()
+soma gcabar_N_Ca = 0.05	// Table 1
+g[0].exec_menu("Keep Lines")
+execute("varyamp(1)",Electrode[0])	// equiv to pressing "vary test level"
+win_width = 350
+win_height = 150
+win_top = 20
+
+	addGraph(0,somaBox)
+
+all_soma_ca_off()
+soma gcabar_L_Ca = 0.01	// Table 1
+g[1].color(2)
+Graph[0].exec_menu("Erase")
+execute("varyamp(1)",Electrode[0])	// equiv to pressing "vary test level"
+
+	addGraph(1,somaBox)
+
+all_soma_ca_off()
+soma gcabar_L_HVA_Ca = 0.01	// Table 1
+g[2].color(3)
+Graph[0].exec_menu("Erase")
+execute("varyamp(1)",Electrode[0])	// equiv to pressing "vary test level"
+	addGraph(2,somaBox)
+
+somaBox.intercept(1)
+        {Graph[1].view(0, -80, 700, 120, 631, win_top, win_width, win_height)}
+somaBox.intercept(0)
+
+somaBox.intercept(0)
+somaBox.map("fig3aleft",20,100,-1,-1)
+

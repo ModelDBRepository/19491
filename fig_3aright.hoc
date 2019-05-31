@@ -1,0 +1,61 @@
+// fig3A.hoc generates an approx to fig3A
+// based on init.hoc whose header lines follow:
+// this file is loaded after fig_3aleft.hoc
+
+proc insert_all_ca() {
+	forall	{
+		insert N_Ca
+		insert L_Ca
+		insert L_HVA_Ca
+	}
+}
+
+proc all_ca_off() {
+	forall	{
+		gcabar_N_Ca = 0
+		gcabar_L_Ca = 0
+		gcabar_L_HVA_Ca = 0
+	}
+}
+
+
+objref dendBox
+
+dendBox = new VBox()
+
+
+insert_all_ca()
+
+all_ca_off()
+xopen("memb_N_dend.hoc")	//active and passive membrane properties of the model,
+Graph[0].exec_menu("Erase")
+
+g[0].exec_menu("Keep Lines")
+g[3].color(2)
+execute("varyamp(1)",Electrode[0])	// equiv to pressing "vary test level"
+
+	addGraph(3,dendBox)
+
+all_ca_off()
+xopen("memb_LLVA_dend.hoc")	//active and passive membrane properties of the model,
+
+g[4].color(2)
+Graph[0].exec_menu("Erase")
+execute("varyamp(1)",Electrode[0])	// equiv to pressing "vary test level"
+
+	addGraph(4,dendBox)
+
+all_ca_off()
+xopen("memb_LHVA_dend.hoc")	//their locations and densities
+
+g[5].color(3)
+Graph[0].exec_menu("Erase")
+execute("varyamp(1)",Electrode[0])	// equiv to pressing "vary test level"
+	addGraph(5,dendBox)
+
+dendBox.intercept(1)
+        {Graph[1].view(0, -80, 700, 120, 631, win_top, win_width, win_height)}
+dendBox.intercept(0)
+
+dendBox.intercept(0)
+dendBox.map("fig3aright",40,120,-1,-1)

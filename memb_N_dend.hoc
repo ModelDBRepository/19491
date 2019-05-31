@@ -1,0 +1,48 @@
+// This file is used to assign active and passive properties to the compartments of the model.
+// Values for maximum Calcium channel conductance (S/cm^2) are given in Table 1, Eur J Neurosci (2000) 12:1635-1646
+// AUTHOR: Kelvin Jones
+// DATE: May 6, 1999
+
+
+
+		//////////////////////////////////
+		//								//
+		//	N_Ca on dendrites			//
+		//	Fig 3A						//
+		//								//
+		//////////////////////////////////
+
+
+
+	set_ra(70)	// (ohm-cm) I set this because I got worried when I
+			// saw a default of 35.4 in the NEURON Main Panel
+			// although all compartments had the right value
+forall	{
+	insert pas
+	g_pas=1/11000		// memb resistance in dendrites is 11 kOhm-cm^2
+	e_pas=-65
+	Ra=70 
+	cm=1
+	insert N_Ca
+	gcabar_N_Ca = 0.002	// Table 1
+}
+soma	{
+	g_pas = 1/250		// memb resistance in soma is 0.25 kOhm-cm^2
+	gcabar_N_Ca = 0		// no N-type current in soma
+}
+
+hillock	{
+	gcabar_N_Ca = 0
+}
+is	{
+	gcabar_N_Ca = 0
+}
+
+// The dendritically located current is on third order dendrites and greater
+// so the conductance elsewhere is set to zero.
+forsec "o0" gcabar_N_Ca = 0
+forsec "o1" gcabar_N_Ca = 0
+forsec "o2" gcabar_N_Ca = 0
+
+
+

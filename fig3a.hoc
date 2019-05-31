@@ -1,0 +1,2 @@
+load_file("fig_3aleft.hoc")
+load_file("fig_3aright.hoc")
