@@ -1,5 +1,6 @@
-# AUTHOR: Kelvin E Jones, kejones@ualberta.ca
-# DATE: Dec 1, 2002
+AUTHOR: Kelvin E Jones  
+kejones@ualberta.ca  
+DATE: Dec 1, 2002
 
 This collection of files can be used to reproduce the modeling results in:
 
